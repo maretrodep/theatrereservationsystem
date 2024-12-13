@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-4">Upcoming Programs</h1>
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        <!-- General Upcoming Programs -->
+        {% if programs %}
+        {% for program in programs %}
+            {% include 'program_card.html' %}
+        {% endfor %}
+        {% endif %}
+
+        {% if programs|length == 7 %}
+        <div class="col">
+            <div class="card h-100 text-center bg-light">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h5 class="card-title">Later Programs</h5>
+                    <p class="card-text">Check out more programs coming soon.</p>
+                    <a href="/programs" class="btn btn-secondary mt-auto">View All</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% if loyalty_programs %}
+    <h1 class="text-center mb-4">Loyalty Early Booking Programs</h1>
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        
+        <!-- Loyalty Member Programs -->
+        {% if loyalty_programs %}
+            {% for program in loyalty_programs %}
+                {% include 'program_card_loyalty.html' %}
+            {% endfor %}
+        {% endif %}
+
+        {% if loyalty_programs|length == 3 %}
+        <div class="col">
+            <div class="card h-100 text-center bg-light">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h5 class="card-title">Later Programs</h5>
+                    <p class="card-text">Check out more programs coming soon.</p>
+                    <a href="/programs" class="btn btn-secondary mt-auto">View All</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

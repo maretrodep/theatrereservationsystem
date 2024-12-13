@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Add a New Program</h2>
+    <form method="POST" action="{{ url_for('admin.add_program') }}">
+        <div class="mb-3">
+            <label for="name" class="form-label">Program Name</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="mb-3">
+            <label for="datetime" class="form-label">Program Date & Time</label>
+            <input type="datetime-local" class="form-control" id="datetime" name="datetime" required>
+        </div>
+        <div class="mb-3">
+            <label for="base_price" class="form-label">Base Price</label>
+            <input type="text" class="form-control" id="base_price" name="base_price" required>
+        </div>
+        <div class="mb-3">
+            <label for="sale_start_datetime" class="form-label">Sale Start Date & Time</label>
+            <input type="datetime-local" class="form-control" id="sale_start_datetime" name="sale_start_datetime" required>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Program</button>
+    </form>
+</div>
+{% endblock %}

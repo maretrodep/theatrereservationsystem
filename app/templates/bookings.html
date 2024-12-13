@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-4">My Bookings</h1>
+
+    <!-- Upcoming Bookings -->
+    {% if upcoming_bookings %}
+        <h2 class="mb-3">Upcoming Bookings</h2>
+        <div class="list-group">
+            {% for booking in upcoming_bookings %}
+                <div class="list-group-item">
+                    <h5 class="mb-3">Program: {{ booking.program.name }}</h5>
+                    <p>
+                        <strong>Date:</strong> {{ booking.program.datetime.strftime('%d, %B, %Y %H:%M') }}<br>
+                        <strong>Price:</strong> ${{ booking.price }}<br>
+                    </p>
+                    
+                    <!-- Show Details Button -->
+                    <button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#bookingDetails{{ booking.id }}" aria-expanded="false" aria-controls="bookingDetails{{ booking.id }}">
+                        Show Details
+                    </button>
+
+                    <!-- Collapse for Booked Seats -->
+                    <div class="collapse mt-3" id="bookingDetails{{ booking.id }}">
+                        <h6>Booked Seats:</h6>
+                        <ul>
+                            {% for seat in booking.booked_seats %}
+                                <li>
+                                    <strong>{{ seat.full_name }}</strong> (Age: {{ seat.age }})<br>
+                                    <strong>Category:</strong> {{ seat.category }}<br>
+                                    <strong>Row:</strong> {{ seat.row }} - <strong>Number:</strong> {{ seat.number }}<br>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+    <h2 class="mb-3">No Upcoming Bookings</h2>
+    {% endif %}
+
+    <!-- Past Bookings -->
+    {% if past_bookings %}
+        <h2 class="mt-4 mb-3">Past Bookings</h2>
+        <div class="list-group">
+            {% for booking in past_bookings %}
+                <div class="list-group-item">
+                    <h5 class="mb-3">Program: {{ booking.program.name }}</h5>
+                    <p>
+                        <strong>Date:</strong> {{ booking.program.datetime.strftime('%d, %B, %Y %H:%M') }}<br>
+                        <strong>Price:</strong> ${{ booking.price }}<br>
+                    </p>
+                    
+                    <!-- Show Details Button -->
+                    <button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#bookingDetails{{ booking.id }}" aria-expanded="false" aria-controls="bookingDetails{{ booking.id }}">
+                        Show Details
+                    </button>
+
+                    <!-- Collapse for Booked Seats -->
+                    <div class="collapse mt-3" id="bookingDetails{{ booking.id }}">
+                        <h6>Booked Seats:</h6>
+                        <ul>
+                            {% for seat in booking.booked_seats %}
+                                <li>
+                                    <strong>{{ seat.full_name }}</strong> (Age: {{ seat.age }})<br>
+                                    <strong>Category:</strong> {{ seat.category }}<br>
+                                    <strong>Row:</strong> {{ seat.row }} - <strong>Number:</strong> {{ seat.number }}<br>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+    <h2 class="mt-4 mb-3">No Past Bookings</h2>
+    {% endif %}
+</div>
+{% endblock %}

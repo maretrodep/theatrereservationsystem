@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-4">Program Management Panel</h1>
+
+    <!-- Upcoming Programs -->
+    {% if upcoming_programs %}
+        <h2 class="text-center mb-3">Upcoming Programs</h2>
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            {% for program in upcoming_programs %}
+                {% include 'admin_program_card.html' %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Cancelled Programs -->
+    {% if cancelled_programs %}
+        <h2 class="text-center mt-5 mb-3">Cancelled Programs</h2>
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            {% for program in cancelled_programs %}
+                {% include 'admin_program_card.html' %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Past Programs -->
+    {% if past_programs %}
+        <h2 class="text-center mt-5 mb-3">Past Programs</h2>
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            {% for program in past_programs %}
+                {% include 'admin_program_card.html' %}
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

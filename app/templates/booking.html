@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-4">Victoria Hall Seating Chart</h1>
+    <h3 class="text-center mb-4">{{ program.name }} - {{ program.datetime.strftime('%Y-%m-%d %H:%M') }}</h3>
+    <p class="text-center"><strong>Base Price:</strong> ${{ program.base_price }}</p>
+    <p class="text-center"><strong>Sale Start:</strong> {{ program.sale_start_datetime.strftime('%Y-%m-%d %H:%M') }}</p>
+    <p class="text-center"><strong>Description:</strong> {{ program.description }}</p>
+
+    <!-- Seating Section -->
+    <div id="seating-section" class="seating-section" style="max-height: 600px; overflow-x: auto; border: 1px solid #ddd; padding: 15px; white-space: nowrap;">
+        <!-- Stalls Section -->
+        <div class="mb-5">
+            <h2 class="text-center">Stalls</h2>
+            {% set category = 'Stalls' %}
+            {% for row in "AA,BB,CC,DD,A,B,C,D,E,F,G,H,J,K,L,M,N,P,Q,R".split(',') %}
+            <div class="seat-row" style="display: flex; justify-content: flex-start; gap: 5px; margin-bottom: 10px;">
+                {% for seat in range(1, 28) %}
+                {% set is_unavailable = (row, seat, category) in unavailable_seats %}
+                <button class="btn btn-sm {{ 'btn-danger' if is_unavailable else 'btn-secondary' }}" 
+                        {% if is_unavailable %}disabled{% endif %}
+                        data-row="{{ row }}" 
+                        data-seat="{{ seat }}" 
+                        data-category="{{ category }}"
+                        onclick="toggleSeatSelection(this)">
+                    {{ row }}{{ seat }}
+                </button>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Circle Section -->
+        <div class="mb-5">
+            <h2 class="text-center">Circle</h2>
+            {% set category = 'Circle' %}
+            {% set rows = {'A': 76, 'B': 82, 'C': 89} %}
+            {% for row, seats in rows.items() %}
+            <div class="seat-row" style="display: flex; justify-content: flex-start; gap: 5px; margin-bottom: 10px;">
+                {% for seat in range(1, seats + 1) %}
+                {% set is_unavailable = (row, seat, category) in unavailable_seats %}
+                <button class="btn btn-sm {{ 'btn-danger' if is_unavailable else 'btn-secondary' }}" 
+                        {% if is_unavailable %}disabled{% endif %}
+                        data-row="{{ row }}" 
+                        data-seat="{{ seat }}" 
+                        data-category="{{ category }}"
+                        onclick="toggleSeatSelection(this)">
+                    {{ row }}{{ seat }}
+                </button>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Upper Circle Section -->
+        <div class="mb-5">
+            <h2 class="text-center">Upper Circle</h2>
+            {% set category = 'Upper Circle' %}
+            {% set rows = {'A': 88, 'B': 93, 'C': 76, 'D': 28, 'E': 27, 'F': 25, 'G': 22, 'H': 18, 'J': 15, 'K': 10, 'L': 6} %}
+            {% for row, seats in rows.items() %}
+            <div class="seat-row" style="display: flex; justify-content: flex-start; gap: 5px; margin-bottom: 10px;">
+                {% for seat in range(1, seats + 1) %}
+                {% set is_unavailable = (row, seat, category) in unavailable_seats %}
+                <button class="btn btn-sm {{ 'btn-danger' if is_unavailable else 'btn-secondary' }}" 
+                        {% if is_unavailable %}disabled{% endif %}
+                        data-row="{{ row }}" 
+                        data-seat="{{ seat }}" 
+                        data-category="{{ category }}"
+                        onclick="toggleSeatSelection(this)">
+                    {{ row }}{{ seat }}
+                </button>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Confirm Button -->
+    <div class="text-center mt-4">
+        <button id="confirm-selection" class="btn btn-primary" onclick="submitSelection()">Confirm Selection</button>
+    </div>
+
+    <!-- Form to Send Selected Seats -->
+    <form id="seat-selection-form" method="POST" action="{{ url_for('booking.booking_details') }}?program_id={{ program.id }}">
+        <input type="hidden" name="selected_seats" id="selected-seats">
+    </form>
+</div>
+
+<script>
+    let selectedSeats = new Set();
+
+    function toggleSeatSelection(button) {
+        const row = button.getAttribute("data-row");
+        const seat = button.getAttribute("data-seat");
+        const category = button.getAttribute("data-category");
+        const seatKey = `${row}-${seat}-${category}`;
+
+        if (selectedSeats.has(seatKey)) {
+            selectedSeats.delete(seatKey);
+            button.classList.remove("btn-primary");
+            button.classList.add("btn-secondary");
+        } else {
+            selectedSeats.add(seatKey);
+            button.classList.remove("btn-secondary");
+            button.classList.add("btn-primary");
+        }
+    }
+
+    function submitSelection() {
+        const seatsArray = Array.from(selectedSeats);
+        document.getElementById("selected-seats").value = JSON.stringify(seatsArray);
+        document.getElementById("seat-selection-form").submit();
+    }
+</script>
+{% endblock %}

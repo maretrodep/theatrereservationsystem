@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Booked Seats for {{ program.name }}</h1>
+    <p>Date and Time: {{ program.datetime.strftime('%d, %B, %Y %H:%M') }}</p>
+    <hr>
+    {% if booked_seats %}
+        <ul>
+        {% for seat in booked_seats %}
+            <li>{{ seat }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No seats are booked for this program.</p>
+    {% endif %}
+
+{% endblock %}

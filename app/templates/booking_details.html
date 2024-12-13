@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-4">Enter Booking Details</h1>
+    <form method="POST" action="{{ url_for('booking.finalize_booking') }}">
+        <input type="hidden" name="program_id" value="{{ program_id }}">
+        <input type="hidden" name="selected_seats" value="{{ selected_seats }}">
+
+        {% for seat in selected_seats %}
+        {% set row, number, category = seat.split('-') %}
+        <div class="form-group">
+            <h5>Seat: {{ row }}{{ number }} ({{ category }})</h5>
+            <label for="full_name_{{ loop.index }}">Full Name:</label>
+            <input type="text" class="form-control" name="seat_details[{{ loop.index }}][full_name]" required>
+
+            <label for="age_{{ loop.index }}">Age:</label>
+            <input type="number" class="form-control" name="seat_details[{{ loop.index }}][age]" required>
+        </div>
+        {% endfor %}
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-success">Finalize Booking</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

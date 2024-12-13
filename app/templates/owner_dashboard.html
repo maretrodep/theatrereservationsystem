@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-4">Owner Panel</h1>
+
+    <h3>Monthly Performance</h3>
+    <canvas id="revenueChart" width="400" height="200"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Chart data passed from the backend
+    const chartData = {{ chart_data|tojson }};
+    const labels = chartData.map(data => `${data.year}-${String(data.month).padStart(2, '0')}`);
+    const revenueData = chartData.map(data => data.total_revenue);
+    const showsData = chartData.map(data => data.program_count);
+    const seatsData = chartData.map(data => data.total_seats);
+
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Total Revenue ($)',
+                data: revenueData,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(context) {
+                            // Use the label for the title
+                            return context[0].label;
+                        },
+                        label: function(context) {
+                            const index = context.dataIndex;
+                            return [
+                                `Revenue: $${revenueData[index].toFixed(2)}`,
+                                `Shows: ${showsData[index]}`,
+                                `Booked Seats: ${seatsData[index]}`
+                            ];
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

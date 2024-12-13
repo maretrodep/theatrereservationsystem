@@ -1,0 +1,88 @@
+<div class="col">
+    <div class="card h-100">
+        <div class="card-body">
+            <h5 class="card-title">{{ program.name }}</h5>
+            <p class="card-text">
+                <strong>Date:</strong> {{ program.datetime.strftime('%d, %B, %Y %H:%M') }}<br>
+                <strong>Base Price:</strong> ${{ program.base_price }}<br>
+            </p>
+            <!-- Action Buttons -->
+            <div class="mt-3">
+                <a href="/admin/view_booked_seats?program_id={{ program.id }}" class="btn btn-primary">Booked Seats</a>
+                {% if program.is_cancelled %}
+                    <!-- Cancelled Program -->
+                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#sendEmailModal{{ program.id }}">
+                        Send Email
+                    </button>
+                {% elif program.datetime >= current_time %}
+                    <!-- Upcoming Program -->
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal{{ program.id }}">
+                        Cancel Program
+                    </button>
+                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#sendEmailModal{{ program.id }}">
+                        Send Email
+                    </button>
+                {% else %}
+                    <!-- Past Program -->
+                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#sendEmailModal{{ program.id }}">
+                        Send Email
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Cancel Program -->
+<div class="modal fade" id="cancelModal{{ program.id }}" tabindex="-1" aria-labelledby="cancelModalLabel{{ program.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelModalLabel{{ program.id }}">Cancel Program</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ url_for('admin.cancel_program', program_id=program.id) }}" method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="email_subject{{ program.id }}" class="form-label">Subject</label>
+                        <input type="text" class="form-control" id="email_subject{{ program.id }}" name="email_subject" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email_body{{ program.id }}" class="form-label">Email Content</label>
+                        <textarea class="form-control" id="email_body{{ program.id }}" name="email_body" rows="5" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Cancel Program</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Send Email -->
+<div class="modal fade" id="sendEmailModal{{ program.id }}" tabindex="-1" aria-labelledby="sendEmailModalLabel{{ program.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sendEmailModalLabel{{ program.id }}">Send Email</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ url_for('admin.send_email', program_id=program.id) }}" method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="email_subject{{ program.id }}" class="form-label">Subject</label>
+                        <input type="text" class="form-control" id="email_subject{{ program.id }}" name="email_subject" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email_body{{ program.id }}" class="form-label">Email Content</label>
+                        <textarea class="form-control" id="email_body{{ program.id }}" name="email_body" rows="5" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Send Email</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

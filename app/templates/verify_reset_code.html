@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h3 class="text-center mb-4">Verify Reset Code</h3>
+        <form method="POST" action="/verify-reset-code">
+            <div class="mb-3">
+                <input class="form-control" type="text" name="code" placeholder="Enter Reset Code" required>
+            </div>
+            <div class="mb-3">
+                <input class="form-control" type="password" name="new_password" placeholder="New Password" required>
+            </div>
+            <div class="mb-3">
+                <input class="form-control" type="password" name="confirm_password" placeholder="Confirm Password" required>
+            </div>
+            <button class="btn btn-primary w-100">Reset Password</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
